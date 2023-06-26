@@ -36,9 +36,11 @@ import com.google.api.client.googleapis.GoogleUtils;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.ServiceOptions;
 import com.google.cloud.http.HttpTransportOptions;
+import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 
@@ -54,6 +56,8 @@ import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.Proxy;
 import java.net.URI;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
@@ -214,10 +218,12 @@ public class GoogleCloudStorageService {
             storageOptionsBuilder.setProjectId(clientSettings.getProjectId());
         }
         if (clientSettings.getCredential() == null) {
-            logger.warn(
-                "\"Application Default Credentials\" are not supported out of the box."
-                    + " Additional file system permissions have to be granted to the plugin."
-            );
+            try {
+                final GoogleCredentials credentials = SocketAccess.doPrivilegedIOException(() -> GoogleCredentials.getApplicationDefault());
+                storageOptionsBuilder.setCredentials(credentials);
+            }catch(IOException e) {
+                logger.error("Error while getting \"Application Default Credentials\"", e);
+            }
         } else {
             ServiceAccountCredentials serviceAccountCredentials = clientSettings.getCredential();
             // override token server URI
