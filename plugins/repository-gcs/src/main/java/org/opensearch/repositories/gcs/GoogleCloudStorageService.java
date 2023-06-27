@@ -221,7 +221,7 @@ public class GoogleCloudStorageService {
             try {
                 final GoogleCredentials credentials = SocketAccess.doPrivilegedIOException(() -> GoogleCredentials.getApplicationDefault());
                 storageOptionsBuilder.setCredentials(credentials);
-            }catch(IOException e) {
+            } catch(IOException e) {
                 logger.error("Error while getting \"Application Default Credentials\"", e);
             }
         } else {
