@@ -40,7 +40,6 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.ServiceOptions;
 import com.google.cloud.http.HttpTransportOptions;
-import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 
@@ -56,8 +55,6 @@ import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.Proxy;
 import java.net.URI;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
