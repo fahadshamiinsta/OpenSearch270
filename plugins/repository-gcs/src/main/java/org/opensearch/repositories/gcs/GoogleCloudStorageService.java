@@ -215,11 +215,12 @@ public class GoogleCloudStorageService {
             storageOptionsBuilder.setProjectId(clientSettings.getProjectId());
         }
         if (clientSettings.getCredential() == null) {
+            logger.info("\"Application Default Credentials\" will be in use");
             try {
                 final GoogleCredentials credentials = SocketAccess.doPrivilegedIOException(() -> GoogleCredentials.getApplicationDefault());
                 storageOptionsBuilder.setCredentials(credentials);
             } catch(IOException e) {
-                logger.error("Error while getting \"Application Default Credentials\"", e);
+                logger.error("Failed to retrieve \"Application Default Credentials\"", e);
             }
         } else {
             ServiceAccountCredentials serviceAccountCredentials = clientSettings.getCredential();
